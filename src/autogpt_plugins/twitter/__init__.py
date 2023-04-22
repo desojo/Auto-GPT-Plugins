@@ -6,6 +6,23 @@ from pathlib import Path
 import os
 import tweepy
 
+from .twitter import (
+    post_tweet,
+    post_reply,
+    get_mentions,
+    send_tweet,
+    get_user_tweets,
+    search_tweets,
+    get_trending_topics,
+    follow_user,
+    unfollow_user,
+    send_direct_message,
+    like_tweet,
+    unlike_tweet,
+    retweet,
+    unretweet,
+)
+
 PromptGenerator = TypeVar("PromptGenerator")
 
 with open(str(Path(os.getcwd()) / ".env"), 'r') as fp:
@@ -229,15 +246,12 @@ class AutoGPTTwitter(AutoGPTPluginTemplate):
         Returns:
             PromptGenerator: The prompt generator.
         """
-        from .twitter import (
-            get_mentions,
-            post_reply,
-            post_tweet,
-            search_twitter_user,
-        )
 
         prompt.add_command(
-            "post_tweet", "Post Tweet", {"tweet_text": "<tweet_text>"}, post_tweet
+            "post_tweet",
+            "Post Tweet",
+            {"tweet_text": "<tweet_text>"},
+            post_tweet,
         )
         prompt.add_command(
             "post_reply",
@@ -245,12 +259,77 @@ class AutoGPTTwitter(AutoGPTPluginTemplate):
             {"tweet_text": "<tweet_text>", "tweet_id": "<tweet_id>"},
             post_reply,
         )
-        prompt.add_command("get_mentions", "Get Twitter Mentions", {}, get_mentions)
         prompt.add_command(
-            "search_twitter_user",
-            "Search Twitter",
-            {"target_user": "<target_user>",  "number_of_tweets": "<number_of_tweets"},
-            search_twitter_user,
+            "get_mentions",
+            "Get Twitter Mentions",
+            {"count": "<count>"},
+            get_mentions,
+        )
+        prompt.add_command(
+            "send_tweet",
+            "Send Tweet",
+            {"tweet_text": "<tweet_text>"},
+            send_tweet,
+        )
+        prompt.add_command(
+            "get_user_tweets",
+            "Get User Tweets",
+            {"user_id": "<user_id>", "count": "<count>"},
+            get_user_tweets,
+        )
+        prompt.add_command(
+            "search_tweets",
+            "Search Tweets",
+            {"query": "<query>", "count": "<count>"},
+            search_tweets,
+        )
+        prompt.add_command(
+            "get_trending_topics",
+            "Get Trending Topics",
+            {"count": "<count>"},
+            get_trending_topics,
+        )
+        prompt.add_command(
+            "follow_user",
+            "Follow User",
+            {"user_id": "<user_id>"},
+            follow_user,
+        )
+        prompt.add_command(
+            "unfollow_user",
+            "Unfollow User",
+            {"user_id": "<user_id>"},
+            unfollow_user,
+        )
+        prompt.add_command(
+            "send_direct_message",
+            "Send Direct Message",
+            {"user_id": "<user_id>", "message_text": "<message_text>"},
+            send_direct_message,
+        )
+        prompt.add_command(
+            "like_tweet",
+            "Like Tweet",
+            {"tweet_id": "<tweet_id>"},
+            like_tweet,
+        )
+        prompt.add_command(
+            "unlike_tweet",
+            "Unlike Tweet",
+            {"tweet_id": "<tweet_id>"},
+            unlike_tweet,
+        )
+        prompt.add_command(
+            "retweet",
+            "Retweet",
+            {"tweet_id": "<tweet_id>"},
+            retweet,
+        )
+        prompt.add_command(
+            "unretweet",
+            "Unretweet",
+            {"tweet_id": "<tweet_id>"},
+            unretweet,
         )
 
         return prompt
